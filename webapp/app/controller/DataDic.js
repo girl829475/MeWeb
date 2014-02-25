@@ -16,6 +16,8 @@ Ext.define('AM.controller.DataDic', {
 								ids.push(record.get('name'));
 							});
 							
+							
+							
 							//2.后台操作(delet)
 							Ext.Ajax.request({
 								url:'/extjs/extjs!deleteData.action',
