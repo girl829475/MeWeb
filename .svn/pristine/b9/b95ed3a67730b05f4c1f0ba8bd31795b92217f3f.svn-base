@@ -1,0 +1,4 @@
+dataDic.keyVal.null=Data dictionary values cannot be empty
+dataDic.keyVal.length.illegal=Data dictionary value [${validatedValue}] [length must be between ${min} and ${Max}
+dataDic.keyVal.illegal=Data dictionary value [${validatedValue}] must be letters or Numbers
+dataDic.pid.null=The parent node can't be empty (please type 0) for the root node

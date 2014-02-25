@@ -1,0 +1,68 @@
+package com.mw.core.interceptor;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
+
+/**
+ * 
+ * @Project SpringMVC
+ * @Copyright © 2008-2013 SPRO Technology Consulting Limited. All rights reserved.
+ * @fileName com.cf.core.interceptor.LogNDCInterceptor
+ * @Version 1.0.0
+ * @author Allan Ai
+ * @time 2013-6-2
+ *
+ */
+public class LogNDCInterceptor extends HandlerInterceptorAdapter {
+
+	@Override
+	public void afterCompletion(HttpServletRequest request, HttpServletResponse response,
+			Object handler, Exception ex) throws Exception {
+		System.out.println("LogNDCInterceptor After completion handle");
+		
+	}
+
+	@Override
+	public void postHandle(HttpServletRequest request, HttpServletResponse response,
+			Object handler, ModelAndView modelAndView) throws Exception {
+		System.out.println("LogNDCInterceptor Post-handle");
+	}
+
+	@Override
+	public boolean preHandle(HttpServletRequest request, HttpServletResponse response,
+			Object handler) throws Exception {
+		System.out.println("LogNDCInterceptor Pre-handle");
+		/*if (1 == 2) {
+			PrintWriter out = response.getWriter();
+			StringBuilder builder = new StringBuilder();
+			builder.append("<script type=\"text/javascript\" charset=\"UTF-8\">");
+			builder.append("alert(\"页面过期，请重新登录\");");
+			builder.append("window.top.location.href=\"");
+			builder.append("xxx");
+			builder.append("/background/index.html\";</script>");
+			out.print(builder.toString());
+			out.close();
+			return false;
+		} else {
+			// 记录日志
+		}
+
+		Map paramsMap = request.getParameterMap();
+		for (Iterator<Map.Entry> it = paramsMap.entrySet().iterator(); it.hasNext();) {
+			Map.Entry entry = it.next();
+			Object[] values = (Object[]) entry.getValue();
+			for (Object obj : values) {
+				// if (!DataUtil.isValueSuccessed(obj)) {
+				//throw new RuntimeException("有非法字符：" + obj);
+				// }
+			}
+		}
+
+		super.preHandle(request, response, handler);*/
+		return true;
+	}
+
+}

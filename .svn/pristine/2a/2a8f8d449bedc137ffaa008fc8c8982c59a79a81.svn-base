@@ -1,0 +1,75 @@
+/**
+ *
+ */
+package com.mw.framework.jdbc;
+
+import java.sql.Connection;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
+
+import javax.sql.DataSource;
+
+import org.springframework.jdbc.datasource.lookup.AbstractRoutingDataSource;
+
+import com.alibaba.druid.pool.DruidDataSource;
+import com.alibaba.druid.pool.DruidDataSourceFactory;
+import com.mw.framework.support.DynamicDataSourceHolder;
+
+/**
+ * 
+ * @Project MeWeb
+ * @Copyright © 2008-2014 SPRO Technology Consulting Limited. All rights reserved.
+ * @fileName com.mw.framework.jdbc.DynamicDataSource.java
+ * @Version 1.0.0
+ * @author Allan Ai
+ * @time 2014-2-19
+ *
+ */
+public class DynamicDataSource extends AbstractRoutingDataSource {
+
+	@Override
+	protected Object determineCurrentLookupKey() {
+		 String dataSourceName = DynamicDataSourceHolder.getCustomerType(); 
+		 System.out.println("dataSourceName:"+dataSourceName);
+		 
+		 Map<Object, Object> targetDataSources = super.getTargetDataSources();
+		 
+		 if(targetDataSources.get("DB03")==null){
+			 try {
+				 Map<String,Object> properties = new HashMap<String,Object>();
+				 properties.put("url", "jdbc:mysql://localhost/meweb3?createDatabaseIfNotExist=true&amp;useUnicode=true&amp;characterEncoding=utf-8");
+				 properties.put("username", "root");
+				 properties.put("password", "admin");
+				 properties.put("initialSize", "1");
+				 properties.put("minIdle", "1");
+				 properties.put("maxActive", "20");
+				 properties.put("maxWait", "60000");
+				 properties.put("timeBetweenEvictionRunsMillis","60000" );
+				 properties.put("minEvictableIdleTimeMillis", "300000");
+				 properties.put("validationQuery", "SELECT 'X'");
+				 properties.put("testWhileIdle","true" );
+				 properties.put("testOnBorrow", "false");
+				 properties.put("testOnReturn", "false");
+				 properties.put("poolPreparedStatements", "false");
+				 properties.put("maxPoolPreparedStatementPerConnectionSize", "20");
+				 properties.put("filters", "stat,log4j,wall");
+				 targetDataSources.put("DB03", DruidDataSourceFactory.createDataSource(properties));
+				 super.setTargetDataSources(targetDataSources);
+				 super.afterPropertiesSet();
+				 System.out.println("insert new db03");
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		 }
+		 
+		 Set<Object> keySet = targetDataSources.keySet();
+		 for (Object object : keySet) {
+			 
+			 Object object2 = targetDataSources.get(object);
+			 System.out.println("---------------------"+object);
+			 System.out.println(object2);
+		 }
+	     return dataSourceName; 
+	}
+}

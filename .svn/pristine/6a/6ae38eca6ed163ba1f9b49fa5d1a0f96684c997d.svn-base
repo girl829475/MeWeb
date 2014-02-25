@@ -1,0 +1,17 @@
+package com.mw.core.dao;
+
+import java.util.List;
+
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Component;
+
+import com.mw.core.domain.DataDic;
+
+@Component
+public interface DataDicDao extends JpaRepository<DataDic, Integer> {
+
+	@Cacheable(value="andCache",key="#root.args[0]+#root.methodName")
+	public List<DataDic> findByPid(String pid);
+	
+}

@@ -1,0 +1,71 @@
+package com.mw.main.controller;
+
+import java.io.Serializable;
+import java.util.List;
+
+import net.sf.ehcache.Ehcache;
+import net.sf.ehcache.Element;
+import net.sf.ehcache.constructs.blocking.BlockingCache;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.Cache;
+import org.springframework.cache.Cache.ValueWrapper;
+import org.springframework.cache.CacheManager;
+import org.springframework.cache.ehcache.EhCacheCache;
+import org.springframework.cache.ehcache.EhCacheCacheManager;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.mw.core.context.SpringContextHolder;
+import com.mw.main.dao.BugMgrDao;
+import com.mw.main.domain.BugMgr;
+
+@Controller
+@RequestMapping("/bug/*")
+public class BugMgrController {
+
+	@Autowired
+	public BugMgrDao bugMgrDao;
+ 
+	
+	
+	public BugMgrController() {
+	}
+
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value="/{id}",method=RequestMethod.GET)
+	@ResponseBody
+	public List<BugMgr> getBugMgr(@PathVariable Integer id){
+		List<BugMgr> findByType = bugMgrDao.findByType("oracle");
+		try {
+			
+			
+			System.out.println(findByType.size());
+			List<BugMgr> findById = bugMgrDao.findById(id);
+			for (BugMgr bugMgr : findById) {
+				System.out.println(bugMgr.getTitle());
+			}
+			EhCacheCacheManager cacheManager = SpringContextHolder.getBean("cacheManager");
+			net.sf.ehcache.CacheManager cacheManager2 = cacheManager.getCacheManager();
+			net.sf.ehcache.Cache cache = cacheManager2.getCache("andCache");
+			
+			List<String> keys = cache.getKeys();
+			
+			for (String string : keys) {
+				Element element = cache.get(string);
+				System.out.println(element.getValue());
+			}
+			
+			/*EhCacheCache sample = (EhCacheCache) cacheManager.getCache("andCache");
+			ValueWrapper valueWrapper = sample.get("nullFindByType");
+			System.out.println(valueWrapper);*/
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		//return bugMgr;
+		return null;
+	}
+}

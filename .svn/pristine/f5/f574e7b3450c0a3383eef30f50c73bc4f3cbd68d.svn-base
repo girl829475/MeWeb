@@ -1,0 +1,5 @@
+package com.mw.core.test;
+
+public class BaseWebControllerTest {
+
+}

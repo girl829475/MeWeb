@@ -1,0 +1,46 @@
+package com.mw.test.dao;
+
+
+
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.transaction.TransactionConfiguration;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.mw.main.dao.BugMgrDao;
+import com.mw.main.domain.BugMgr;
+
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(locations={"classpath:applicationContext.xml"})
+@TransactionConfiguration(transactionManager="transactionManager") 
+@Transactional
+public class BugMgrDaoTest {
+
+	@Autowired
+	private BugMgrDao bugMgrDao;
+	
+	@Before
+	public void setUp() throws Exception {
+		
+	}
+
+	@After
+	public void tearDown() throws Exception {
+		
+	}
+	
+	@Test
+	public void testSave(){
+		bugMgrDao.save(new BugMgr("oracle", "xxx", "ddd;ee;", "aaa"));
+	}
+	
+	public void testFind(){
+		
+	}
+	
+}

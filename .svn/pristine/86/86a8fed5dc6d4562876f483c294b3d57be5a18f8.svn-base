@@ -1,0 +1,10 @@
+package com.mw.main.dao;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Component;
+
+import com.mw.main.domain.BugMgr;
+
+@Component
+public interface BugMgrDao extends JpaRepository<BugMgr, String> {
+}

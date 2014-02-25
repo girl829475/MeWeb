@@ -1,0 +1,73 @@
+package com.mw.test.dao;
+
+
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.annotation.Rollback;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.transaction.TransactionConfiguration;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.mw.main.dao.BugMgrDao;
+import com.mw.main.domain.BugMgr;
+
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(locations={"classpath:applicationContext.xml"})
+@TransactionConfiguration(transactionManager="transactionManager") 
+@Transactional
+public class BugMgrDaoTest {
+
+	@Autowired
+	private BugMgrDao bugMgrDao;
+	
+	@Before
+	public void setUp() throws Exception {
+		
+	}
+
+	@After
+	public void tearDown() throws Exception {
+		
+	}
+	
+	//@Test
+	@Rollback(value=false)
+	public void testSave(){
+		//bugMgrDao.save(new BugMgr("oracle", "xxx", "ddd;ee;", "aaa"));
+		List<BugMgr> bugList = new ArrayList<BugMgr>();
+		for (int i = 0; i < 10000; i++) {
+			bugList.add(new BugMgr("oracle", "xxx"+i, "", "aaa"));
+		}
+		bugMgrDao.save(bugList);
+	}
+	
+	@Test
+	public void testFind(){
+//		BugMgr bugMgr = bugMgrDao.findById(2);
+//		bugMgr.setContents("哈哈数据更新了。");
+//		bugMgrDao.save(bugMgr);
+//		bugMgrDao.findById(2);
+//		bugMgrDao.findById(2);
+//		System.out.println(bugMgrDao.findById(2).getContents());
+//		
+		long currentTime = System.currentTimeMillis();
+		List<BugMgr> findByType = bugMgrDao.findByType("oracle");
+		System.out.println(findByType.size());
+		
+		long endTime = System.currentTimeMillis();
+		System.out.println(endTime-currentTime);
+		
+		bugMgrDao.findByType("oracle");
+		
+		
+	}
+	
+}

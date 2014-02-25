@@ -1,0 +1,83 @@
+package com.mw.main.domain;
+
+import javax.persistence.Cacheable;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
+
+@Cache(usage = CacheConcurrencyStrategy.READ_WRITE, region = "mycache")
+@Entity
+@Table(name = "BUG_MGR")
+public class BugMgr {
+
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	public Integer id;
+	public String type;
+	public String title;
+	public String keywords;
+
+	public BugMgr() {
+		super();
+	}
+
+	public BugMgr(String type, String title, String keywords, String contents) {
+		super();
+		this.type = type;
+		this.title = title;
+		this.keywords = keywords;
+		this.contents = contents;
+	}
+
+	/**
+	 * mysql text:默认即可 MeduimText :16777215 LongText:2147483647
+	 */
+	@Column
+	public String contents;
+
+	public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
+	}
+
+	public String getTitle() {
+		return title;
+	}
+
+	public void setTitle(String title) {
+		this.title = title;
+	}
+
+	public String getKeywords() {
+		return keywords;
+	}
+
+	public void setKeywords(String keywords) {
+		this.keywords = keywords;
+	}
+
+	public String getContents() {
+		return contents;
+	}
+
+	public void setContents(String contents) {
+		this.contents = contents;
+	}
+
+}

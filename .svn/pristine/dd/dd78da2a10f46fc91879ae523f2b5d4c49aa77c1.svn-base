@@ -1,0 +1,92 @@
+package com.mw.core.controller;
+
+import java.util.List;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.mw.core.bean.Message;
+import com.mw.core.dao.DataDicDao;
+import com.mw.core.domain.DataDic;
+
+
+@Controller
+@RequestMapping("/sys/dd/*")
+public class DataDicController {
+	
+	private static final Logger logger = LoggerFactory.getLogger(DataDicController.class);
+	
+	@Autowired
+	public DataDicDao dataDicDao;
+
+	/**
+	 * 根据PID获取数据字典数据(优先缓存)
+	 * @param pid
+	 * @return
+	 */
+	@RequestMapping(value = "/list/{pid}", method = RequestMethod.GET)
+	@ResponseBody
+	public List<DataDic> getDataDicList(@PathVariable String pid) {
+		return dataDicDao.findByPid(pid);
+	}
+	
+	/**
+	 * 根据ID获取数据字段详细信息
+	 * @param id
+	 * @return
+	 */
+	@RequestMapping(value = "/get/{id}", method = RequestMethod.GET)
+	@ResponseBody
+	public DataDic getDataDic(@PathVariable Integer id){
+		DataDic dataDic = dataDicDao.findOne(id);
+		return new DataDic("CD01",1,"DD","光盘01","光盤01","CD01");
+	}
+	
+	/**
+	 * 保存数据字典
+	 * @param dataDic
+	 * @return
+	 */
+	@RequestMapping(value = "/save", method = RequestMethod.POST)
+	@ResponseBody
+	public Message save(DataDic dataDic){
+		Message msg = null;
+		if(dataDic!=null){
+			try {
+				logger.debug(dataDic.toString());
+				dataDicDao.save(dataDic);
+				msg = new Message("ok");
+			} catch (Exception e) {
+				msg = new Message("DD-S-500",e.getLocalizedMessage());
+			}
+		}else{
+			msg = new Message("DD-S-000","dataDic is null");
+		}
+		logger.debug(msg.toString());
+		return msg;
+	}
+	
+	/**
+	 * 根据ID删除数据字典
+	 * @param id
+	 * @return
+	 */
+	@RequestMapping(value = "/del/{id}", method = RequestMethod.GET)
+	@ResponseBody
+	public Message delete(@PathVariable Integer id){
+		Message msg = null;
+		try {
+			dataDicDao.delete(id);
+			msg = new Message(null,"ok");
+		} catch (Exception e) {
+			msg = new Message("DD-D-500",e.getLocalizedMessage());
+		}
+		return msg;
+	}
+}

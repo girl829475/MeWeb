@@ -1,0 +1,13 @@
+1.后台框架
+spring 4.0.0
+spring data jpa 1.4.3
+spring data commons 1.6.3
+hibernate 4.2.8
+dom4j 1.6.1
+c3p0 0.9.2.1
+ehcache 2.4.3
+mysql 5.1.28
+oracle 10.2.0.4.0
+quartz 2.2.1
+junit 4.11
+jco 3.0.9

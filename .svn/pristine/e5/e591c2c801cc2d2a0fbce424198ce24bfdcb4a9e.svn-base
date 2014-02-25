@@ -1,0 +1,22 @@
+package com.mw.main.dao;
+
+import javax.persistence.QueryHint;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.QueryHints;
+import org.springframework.stereotype.Component;
+
+import com.mw.main.domain.BugMgr;
+
+@Component
+public interface BugMgrDao extends JpaRepository<BugMgr, Integer> {
+
+	/**
+	 * 第一种情况的缓存,处理spring data jpa自身的方法
+	 * 
+	 * @param id
+	 * @return
+	 */
+	@QueryHints({ @QueryHint(name = "org.hibernate.cacheable", value = "true") })
+	public BugMgr findById(Integer id);
+}
