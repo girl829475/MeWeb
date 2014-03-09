@@ -26,6 +26,7 @@
     http://www.springframework.org/schema/ehcache  http://www.springframework.org/schema/cache/springmodules-ehcache.xsd
     http://www.springframework.org/schema/cache http://www.springframework.org/schema/cache/spring-cache-4.0.xsd">
 
+	<import resource="classpath:simplesm-context.xml" />
     <!-- 自动扫描包，可以写多个 -->
     <!-- 使用 annotation 自动注册bean,并检查@Controller, @Service, @Repository注解已被注入 -->
     <context:component-scan base-package="com.mw.main,com.mw.framework"/>
@@ -49,34 +50,6 @@
 		</property>
 	</bean>
 	 -->
-	 
-	 <!-- 启用缓存注解功能，这个是必须的，否则注解不会生效，另外，该注解一定要声明在spring主配置文件中才会生效 -->
-    <cache:annotation-driven cache-manager="cacheManager" />
-     <!-- cacheManager工厂类，指定ehcache.xml的位置 -->
-    <bean id="cacheManagerFactory"
-        class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean">
-        <property name="configLocation" value="classpath:/ehcache.xml" ></property>
-    </bean>
- 
- 
-    <!-- 声明cacheManager -->
-    <bean id="cacheManager" class="org.springframework.cache.ehcache.EhCacheCacheManager">
-        <property name="cacheManager" ref="cacheManagerFactory"></property>
-    </bean>
-	
-	<!-- spring自己的换管理器，这里定义了两个缓存位置名称 ，既注解中的value 
-<bean id="cacheManager" class="org.springframework.cache.support.SimpleCacheManager">    
-    <property name="caches">    
-       <set>    
-          <bean class="org.springframework.cache.concurrent.ConcurrentCacheFactoryBean">
-          	<property name="name" value="default"/>
-          </bean>
-          <bean class="org.springframework.cache.concurrent.ConcurrentCacheFactoryBean">
-          	<property name="name" value="andCache"></property>
-          </bean>    
-       </set>      
-	</property>    
-</bean>-->    
 	 
     <!-- aspectj -->
     <aop:aspectj-autoproxy/>
@@ -165,6 +138,7 @@
     </bean>
     
     <mvc:annotation-driven validator="validator"/>
+    
    	<mvc:interceptors>
     	<ref bean="requestHelperInterceptor"/>   <!-- RequestHelper拦截器--> 
    		<ref bean="userInfoInterceptor"/>  <!-- 用户信息拦截器--> 
@@ -248,38 +222,7 @@
       <property name="filters" value="stat" /> 
   </bean>
   
-  <bean id="defaultDataSource2" class="com.alibaba.druid.pool.DruidDataSource" init-method="init" destroy-method="close"> 
-      <!-- 基本属性 url、user、password -->
-      <property name="url" value="${${db}2.hibernate.connection.url}" />
-      <property name="username" value="${${db}2.hibernate.connection.username}" />
-      <property name="password" value="${${db}2.hibernate.connection.password}" />
-
-      <!-- 配置初始化大小、最小、最大 -->
-      <property name="initialSize" value="1" />
-      <property name="minIdle" value="1" /> 
-      <property name="maxActive" value="20" />
-
-      <!-- 配置获取连接等待超时的时间 -->
-      <property name="maxWait" value="60000" />
-
-      <!-- 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒 -->
-      <property name="timeBetweenEvictionRunsMillis" value="60000" />
-
-      <!-- 配置一个连接在池中最小生存的时间，单位是毫秒 -->
-      <property name="minEvictableIdleTimeMillis" value="300000" />
-
-      <property name="validationQuery" value="SELECT 'x'" />
-      <property name="testWhileIdle" value="true" />
-      <property name="testOnBorrow" value="false" />
-      <property name="testOnReturn" value="false" />
-
-      <!-- 打开PSCache，并且指定每个连接上PSCache的大小 -->
-      <property name="poolPreparedStatements" value="false" />
-      <property name="maxPoolPreparedStatementPerConnectionSize" value="20" />
-
-      <!-- 配置监控统计拦截的filters -->
-      <property name="filters" value="stat,log4j,wall" /> 
-  </bean>
+   
 	
 	<!-- JNDI数据源
 	<bean id="dataSource" class="org.springframework.jndi.JndiObjectFactoryBean">
@@ -294,7 +237,6 @@
 		<property name="targetDataSources">
 			<map key-type="java.lang.String">
 				<entry key="DB01" value-ref="defaultDataSource"/>
-				<entry key="DB02" value-ref="defaultDataSource2"/>
 			</map>
 		</property>
 		<property name="defaultTargetDataSource" ref="defaultDataSource"/>
@@ -351,14 +293,15 @@
 		</property>
 		 <property name="jpaProperties">
 		 	<props>
-		 		<prop key="hibernate.hbm2ddl.auto">update</prop>
+		 		<prop key="hibernate.hbm2ddl.auto">${${db}.hibernate.hbm2ddl.auto}</prop>
 		 		<!-- 链接释放策略 on_close | after_transaction | after_statement | auto  -->
 		 		<prop key="hibernate.connection.release_mode">after_transaction</prop>
 				<prop key="hibernate.show_sql">true</prop>
 				<!-- org.hibernate.dialect.MySQLDialect -->
 				<!-- org.hibernate.dialect.MySQLInnoDBDialect -->
-		 		<prop key="hibernate.dialect">org.hibernate.dialect.MySQLDialect</prop>
+		 		<prop key="hibernate.dialect">${${db}.hibernate.dialect}</prop>
 				<prop key="hibernate.current_session_context_class">org.springframework.orm.hibernate4.SpringSessionContext</prop>
+				<prop key="hibernate.use_sql_comments">true</prop>
 				<!-- hibernate 二级缓存 
 				<prop key="hibernate.cache.use_second_level_cache">true</prop>
 				<prop key="hibernate.cache.region.factory_class">org.hibernate.cache.ehcache.EhCacheRegionFactory</prop>
@@ -368,6 +311,33 @@
 		 	</props>
 		 </property>
 	</bean>
+	
+	<!-- 分布式缓存 -->
+	<bean name="appCache" class="com.google.code.ssm.CacheFactory">
+        <property name="cacheClientFactory">
+            <bean class="com.google.code.ssm.providers.xmemcached.MemcacheClientFactoryImpl"/>
+        </property>
+        <property name="addressProvider">
+            <bean class="com.google.code.ssm.config.DefaultAddressProvider">
+                <!--memcached服务器ip:port 可以是多个，格式为: 127.0.0.1:11211,192.168.100.11:11211-->
+                <property name="address" value="${memcached.server}"/>
+            </bean>
+        </property>
+        <property name="configuration">
+            <!-- memcached连接器的配置，具体的配置项参考这个类 -->
+            <bean class="com.google.code.ssm.providers.CacheConfiguration">
+                <!--是否使用一致性哈希-->
+                <property name="consistentHashing" value="true"/>
+                <!--连接池-->
+                <!--<property name="connectionPoolSize" value="10"/>-->
+                <!--<property name="optimizeGet" value="true"/>-->
+             </bean>
+        </property>
+        <property name="cacheName">
+            <!-- 该Memcached配置的Cache名称 一个应用中存在多个Memcached时，各个配置的cacheName必须不同。如果该值未设，系统默认为default -->
+            <value>appCache</value>
+        </property>
+    </bean>
 	
 	<!-- Spring 方法级别监控 -->
 	<bean id="druid-stat-interceptor" class="com.alibaba.druid.support.spring.stat.DruidStatInterceptor"/>
@@ -395,5 +365,5 @@
 	<!-- 用注解来实现事务管理 -->
 	<tx:annotation-driven transaction-manager="transactionManager" proxy-target-class="false"/>
 	
-	<jpa:repositories base-package="com.mw.framework.dao,com.mw.main.dao" entity-manager-factory-ref="entityManagerFactory" transaction-manager-ref="transactionManager"  />
+	<jpa:repositories base-package="com.mw.framework.dao,com.mw.main.dao" repository-impl-postfix="Impl" entity-manager-factory-ref="entityManagerFactory" transaction-manager-ref="transactionManager"  />
 </beans>

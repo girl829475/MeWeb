@@ -1,0 +1,17 @@
+{
+	id : 'root',
+	text : '中文哈哈',
+	children : [{
+				id : XSD01,
+				text : 煌照明科技有限公司,
+				children : [{
+							id : XSD03,
+							text : 总经理,
+							children : []
+						}, {
+							id : XSD02,
+							text : 董事会,
+							children : []
+						}]
+			}]
+}

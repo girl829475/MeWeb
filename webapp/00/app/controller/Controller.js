@@ -1,0 +1,67 @@
+Ext.Loader.setConfig({enabled:true});
+Ext.define('HT.controller.Controller',{
+		extend:'Ext.app.Controller',
+		views:[
+			'Accordion',
+			'Center',
+			'Top',
+			'Bottom',
+			'Grid'
+		],
+		stores:[
+		        'Users'
+		],
+		models:[
+		      'User'
+		],
+		//查找到组件
+		refs:[{
+		      	ref:'tab',
+		      	//找到center
+		      	selector:'center'
+			}
+		],
+		init:function(){
+			this.control({
+					//首先找到accordion，然后找到button组件中id=button1的组件
+					'accordion button[id=homePageSet]':{
+		            		click:function(){
+		            			//alert(o.text),
+		            			//通过ref查找到并且进行操作
+		            				this.getTab().add({
+			            				title:'首页设置',
+		            					id:'homeSet',
+		            					//加载修改首页内容的form表单页面
+		            					html:"<iframe scrolling='auto' frameborder='0' width='100%' height='100%' src='/core/dd/init'></iframe>",
+		            					//可以被关闭
+		            					closable:true,
+		            					//自动销毁
+		            					autoDestroy:true
+		            				})
+		            			//设置id为“homeSet”的活动页
+		            			this.getTab().setActiveTab('homeSet');
+		            		}
+	            	},
+	            	'accordion button[id=adminSet]':{
+	            		click:function(o){
+	            			var grids = new HT.view.Grid();
+	            			//alert(forms);
+	            			//alert(o.text);
+	            				this.getTab().add({
+	            					title:'管理员设置',
+	            					id:'adminSetTab',
+	            					items:[grids],
+	            					closable:true,
+	            					closeAction:'destory',
+	            					autoDestory:true
+	            				}),
+	            			//设置id为“adminSet”的活动页
+	            			this.getTab().setActiveTab('adminSetTab');
+	            			var tab = this.getTab().getActiveTab();
+	            			tab.up();
+	            		}
+	            	}
+	         });
+		}
+	}
+);

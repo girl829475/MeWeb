@@ -1,0 +1,25 @@
+Ext.define('AM.controller.MMindex', {
+    extend: 'Ext.app.Controller',
+	init:function(){
+		this.control({
+			'viewport > panel':{
+				render : this.onPanelRendered
+			}
+		});
+	},
+	onPanelRendered: function() {
+		//this.add([{title:'Tab 1'}, {title:'Tab 2'}]);
+		//for(var i=0;i<20;i++)
+		Ext.getCmp('mm_tabpanel').add([{title:'Tab 1'}, {title:'Tab 2'}]);
+        console.log('The tabpanel was rendered:'+this.id);  
+    },
+	views:[
+		'MMindex'
+	],
+	stores :[
+		//"DataDic"
+	],
+	models :[
+		//"DataDic"
+	]
+});
