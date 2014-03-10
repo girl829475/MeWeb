@@ -15,7 +15,8 @@ Ext.define("AM.view.MMindex",{
         'AM.view.portal.WestMenu',
         'AM.view.portlet.GridPortlet', 
         'AM.view.portlet.ChartPortlet',
-        'AM.util.Constants'
+        'AM.util.Constants',
+        'AM.view.MMnav'
     ],
     //plugins:[Ext.create('Ext.ux.IFrame', {})],
 	//title: '容器面板',
@@ -90,57 +91,12 @@ Ext.define("AM.view.MMindex",{
 			        tools: [{ type: 'gear', handler: function () {
 			            Ext.Msg.alert('提示', '配置按钮被点击。');
 			        }
-			        }, { type: 'refresh'}],
-				        title: '云平台设置',
-				        xtype:'treepanel',
-				        id:'mmTreePanel',
-				       /* listeners:{
-					        itemclick:function(tree,record,item,index,e,options){
-								Ext.getCmp('mm_tabpanel').add([{title:'Tab 1',items:[new Ext.createWidget('deptlist')]}]);
-					        }
-				        },*/
-				        root : {
-							text : 'root',
-							id : '0',
-							leaf : false,
-							children : [{
-										text : '技术部门',
-										//checked : false,
-										id : '01',
-										leaf : false,
-										children : [{
-													//checked : false,
-													text : '研发部',
-													id : '0101',
-													leaf : true
-												}, {
-													//checked : false,
-													text : '实施部',
-													id : '0102',
-													leaf : true
-												}]
-									}, {
-										text : '后勤部门',
-										id : '02',
-										//checked : false,
-										leaf : false,
-										children : [{
-													text : '人事部',
-													id : '0201',
-													//checked : false,
-													leaf : true
-												}, {
-													text : '行政部',
-													id : '0202',
-													//checked : false,
-													leaf : true
-												}]
-									}]
-						}
+			        }, { type: 'refresh',itemId:'refreshNav'}],
+			         xtype:'mmnav'
 				    }, {
-				        title: '云平台设置2',
-				        html: "子元素2"
-				        
+				        title: '云平台设置1'
+				    },{
+				        title: '云平台设置2'
 				    }, {
 				        id: 'panel3',
 				        title: '个人信息',

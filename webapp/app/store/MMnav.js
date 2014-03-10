@@ -1,26 +1,15 @@
-Ext.define("AM.store.MMnav", {
-	extend : "Ext.data.TreeStore",
+Ext.define('AM.store.MMnav', {
+	extend : 'Ext.data.TreeStore',
+	//defaultRootId : 'root',
+	root: {
+		//name:'name',
+	    //expanded: true
+	},
 	model : 'AM.model.MMnav',
-	storeId: 's_nav',
 	proxy : {
 		type : 'ajax',
-		api : {
-			create : 'TreeApiController.do?method=createTreeNode',
-			read : 'TreeApiController.do?method=queryTreeList',
-			update : 'TreeApiController.do?method=updateTreeNode',
-			destroy : 'TreeApiController.do?method=destroyTreeNode'
-		},
-		writer : {
-			type : 'json',
-			allowSingle : false,
-			encode : true,
-			root : 'records'
-		}
+		url:'/core/og/list?num=2',
+		reader:'json'
 	},
-	root : {
-		id : -1,
-		expanded : true,
-		text : "My Root"
-		},
-		autoLoad : true
+	autoLoad: true
 });

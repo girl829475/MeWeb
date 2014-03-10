@@ -12,7 +12,9 @@ import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import org.hibernate.annotations.Type;
 
@@ -23,31 +25,32 @@ import com.mw.framework.bean.impl.UUIDEntity;
 public class SysOrgan extends UUIDEntity implements Serializable {
 
 	private static final long serialVersionUID = -1770402312221827459L;
-	// private String pid;
 	private String ctrlCode;
 	private String remark;
 	private Integer sortCode;
 	private String name;
 	private boolean leaf = false;
 	private SysOrgan parent;
+	private String pid;
 
 	private Set<SysOrgan> children = new HashSet<SysOrgan>();
 
 	public SysOrgan() {
 		super();
 	}
-	
+
 	public SysOrgan(Integer sortCode, String name) {
 		super();
 		this.sortCode = sortCode;
 		this.name = name;
 	}
 
-	public SysOrgan(Integer sortCode, String name, SysOrgan parent) {
+	public SysOrgan(Integer sortCode, String name,boolean leaf ,SysOrgan parent) {
 		super();
 		this.sortCode = sortCode;
 		this.name = name;
 		this.parent = parent;
+		this.leaf = leaf;
 	}
 
 	public SysOrgan(Integer sortCode, String name, SysOrgan parent,
@@ -95,7 +98,6 @@ public class SysOrgan extends UUIDEntity implements Serializable {
 		this.name = name;
 	}
 
-	// @Transient
 	@Column(name = "LEAF")
 	@Type(type = "java.lang.Boolean")
 	public boolean isLeaf() {
@@ -106,14 +108,8 @@ public class SysOrgan extends UUIDEntity implements Serializable {
 		this.leaf = leaf;
 	}
 
-	// @OneToMany(fetch = FetchType.EAGER, targetEntity = SysOrgan.class,
-	// cascade = // 单项一对多配置
-	// { CascadeType.PERSIST, CascadeType.REMOVE, CascadeType.MERGE, })
-	// @JoinColumns(value = { @JoinColumn(name = "PID", referencedColumnName =
-	// "ID") })
-	// 对应关系 Pid = id
-
 	@OneToMany(mappedBy = "parent")
+	@OrderBy(value = "sortCode ASC")
 	public Set<SysOrgan> getChildren() {
 		return children;
 	}
@@ -130,6 +126,18 @@ public class SysOrgan extends UUIDEntity implements Serializable {
 
 	public void setParent(SysOrgan parent) {
 		this.parent = parent;
+	}
+
+	@Transient
+	public String getPid() {
+		if(pid==null && this.parent!=null){
+			return this.parent.getId();
+		}
+		return pid;
+	}
+
+	public void setPid(String pid) {
+		this.pid = pid;
 	}
 
 }

@@ -1,8 +1,11 @@
 Ext.define("AM.view.MMnav", {
 	extend : 'Ext.tree.Panel',
-	title : 'Simple Tree',
 	alias: 'widget.mmnav',
-	store : 'MMn2av',
+	store : 'MMnav',
+	itemId:'nav_tree',
 	hideHeaders : true,
-	rootVisible : true
+	rootVisible : false,
+	displayField:'name',
+	animate:true,
+	animCollapse :true
 });

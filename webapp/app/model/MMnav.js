@@ -4,11 +4,10 @@ Ext.define('AM.model.MMnav', {
 				name : 'id',
 				type : 'string'
 			}, {
-				name : 'text',
+				name : 'name',
 				type : 'string'
 			}, {
-				name : 'index',
-				type : 'int',
-				persist : true
+				name : 'pid',
+				type : 'string'
 			}]
 });

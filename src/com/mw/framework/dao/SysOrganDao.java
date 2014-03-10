@@ -3,7 +3,13 @@
  */
 package com.mw.framework.dao;
 
+import java.util.List;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Component;
 
 import com.mw.framework.domain.SysOrgan;
 
@@ -16,6 +22,10 @@ import com.mw.framework.domain.SysOrgan;
  * @time 2014-3-9
  *
  */
+@Component
 public interface SysOrganDao  extends JpaRepository<SysOrgan, String>{
-
+	
+	public Page<SysOrgan> findById(String id,Pageable pageRequest);
+	
+	public List<SysOrgan> findByParent(SysOrgan parent,Sort sort);
 }

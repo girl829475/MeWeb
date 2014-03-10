@@ -5,6 +5,12 @@ Ext.define('AM.controller.MMindex', {
 			'viewport > panel':{
 				render : this.onPanelRendered
 			},
+			'accordion > tool[id=refreshNav]':{
+				click:function(){
+					alert('你妹');
+				
+				}
+			},
 			'treepanel':{
 				itemclick:function(tree,record,item,index,e,options){
 					//alert(record.get('id'));
@@ -116,7 +122,7 @@ Ext.define('AM.controller.MMindex', {
 		'MMindex'
 	],
 	stores :[
-		//"DataDic"
+		"MMnav"
 	],
 	models :[
 		//"DataDic"

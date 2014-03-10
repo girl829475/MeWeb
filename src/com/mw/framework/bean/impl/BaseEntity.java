@@ -13,6 +13,7 @@ import com.mw.framework.bean.IBaseObj;
 //JPA Entity基类的标识
 @MappedSuperclass
 public abstract class BaseEntity implements IBaseObj {
+	private static final long serialVersionUID = 7200292975335350461L;
 	protected String createUser;
 	protected Date createTime;
 	protected String updateUser;
